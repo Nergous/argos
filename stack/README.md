@@ -9,7 +9,7 @@ allocation-friendly, and uses Go 1.23 range-over-func iterators
 ## Install
 
 ```go
-import "argos/stack"
+import "github.com/Nergous/argos/stack"
 ```
 
 Requires Go 1.23+ (for range-over-func). The module targets Go 1.26.
@@ -22,7 +22,7 @@ package main
 import (
 	"fmt"
 
-	"argos/stack"
+	"github.com/Nergous/argos/stack"
 )
 
 func main() {
@@ -133,8 +133,8 @@ rendered alongside the API on the godoc page.
 View the documentation locally:
 
 ```sh
-go doc argos/stack          # package overview
-go doc argos/stack Stack    # the Stack type and its methods
+go doc github.com/Nergous/argos/stack          # package overview
+go doc github.com/Nergous/argos/stack Stack    # the Stack type and its methods
 ```
 
 The same comments render on pkg.go.dev-style godoc.

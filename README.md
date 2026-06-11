@@ -13,7 +13,7 @@ Go 1.23+ (for range-over-func iterators). The module targets Go 1.26.
 ## Install
 
 ```go
-import "argos/stack"
+import "github.com/Nergous/argos/stack"
 ```
 
 ## Packages
@@ -32,7 +32,7 @@ package main
 import (
 	"fmt"
 
-	"argos/stack"
+	"github.com/Nergous/argos/stack"
 )
 
 func main() {
@@ -64,8 +64,8 @@ Each package ships a detailed README and verified `example_test.go` files that
 render on godoc:
 
 ```sh
-go doc argos/stack          # package overview
-go doc argos/stack Stack    # a type and its methods
+go doc github.com/Nergous/argos/stack          # package overview
+go doc github.com/Nergous/argos/stack Stack    # a type and its methods
 ```
 
 ## License

@@ -3,7 +3,7 @@ package stack_test
 import (
 	"fmt"
 
-	"argos/stack"
+	"github.com/Nergous/argos/stack"
 )
 
 // A stack is LIFO (last in, first out): elements come out in the reverse
