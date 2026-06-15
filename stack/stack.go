@@ -48,7 +48,7 @@ func (s *Stack[T]) Cap() int {
 
 // IsEmpty reports whether the stack has no elements.
 func (s *Stack[T]) IsEmpty() bool {
-	return len(s.data) < 1
+	return len(s.data) == 0
 }
 
 // Peek returns the top element without removing it. The boolean result is false
@@ -56,7 +56,7 @@ func (s *Stack[T]) IsEmpty() bool {
 // of T.
 func (s *Stack[T]) Peek() (T, bool) {
 	l := len(s.data)
-	if l < 1 {
+	if l == 0 {
 		var zero T
 		return zero, false
 	}
