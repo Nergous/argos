@@ -89,6 +89,86 @@ func ExampleStack_All() {
 	// remaining: 3
 }
 
+// PushN adds several elements at once, in argument order, so the last argument
+// ends up on top. It is equivalent to calling Push for each value but grows the
+// backing array at most once.
+func ExampleStack_PushN() {
+	s := stack.New[int]()
+	s.PushN(1, 2, 3) // 3 ends up on top
+
+	for !s.IsEmpty() {
+		v, _ := s.Pop()
+		fmt.Println(v)
+	}
+	// Output:
+	// 3
+	// 2
+	// 1
+}
+
+// Clone returns an independent shallow copy. Mutating one stack does not affect
+// the other, since they share no backing array.
+func ExampleStack_Clone() {
+	a := stack.New[int]()
+	a.PushN(1, 2, 3)
+
+	b := a.Clone()
+	b.Pop() // removes 3 from b only
+
+	fmt.Println(a.Len(), b.Len())
+
+	top, _ := a.Peek()
+	fmt.Println("a top:", top)
+	// Output:
+	// 3 2
+	// a top: 3
+}
+
+// Slice returns a copy of the elements from top to bottom (LIFO) — the same
+// order All yields. The returned slice is independent of the stack.
+func ExampleStack_Slice() {
+	s := stack.New[int]()
+	s.PushN(1, 2, 3)
+
+	out := s.Slice()
+	fmt.Println(out)
+
+	// The slice is detached: modifying it leaves the stack untouched.
+	out[0] = 99
+	top, _ := s.Peek()
+	fmt.Println("stack top:", top)
+
+	// An empty stack returns nil.
+	empty := stack.New[int]()
+	fmt.Println(empty.Slice() == nil)
+	// Output:
+	// [3 2 1]
+	// stack top: 3
+	// true
+}
+
+// Grow reserves capacity for more elements up front; Shrink and Clip both
+// shrink the capacity back down to the current length. Shrink copies into a
+// right-sized array and frees the old one immediately, whereas Clip only
+// reslices in O(1) and defers reclaiming memory to the next growth.
+func ExampleStack_Shrink() {
+	s := stack.NewWithCap[int](1024)
+	s.PushN(1, 2, 3)
+
+	s.Grow(2000) // reserve room for 2000 more elements
+	fmt.Println(s.Cap() >= 2003)
+
+	s.Shrink() // copy into a right-sized array, free the old one now
+	fmt.Println(s.Len(), s.Cap())
+
+	s.Clip() // already tight: no-op
+	fmt.Println(s.Len(), s.Cap())
+	// Output:
+	// true
+	// 3 3
+	// 3 3
+}
+
 // Reset empties the stack but keeps the allocated backing array, so it can be
 // reused without a new allocation.
 func ExampleStack_Reset() {
@@ -111,6 +191,22 @@ func ExampleStack_Clear() {
 	s.Clear()
 	fmt.Println(s.Len(), s.Cap())
 	// Output: 0 0
+}
+
+// The nil zero value of *Stack[T] behaves as an empty stack for every
+// read-only method, so it can be queried safely without first calling New.
+// Mutating methods (Push, PushN, Clear, Reset, Grow, Shrink, Clip) still
+// require a stack created with New.
+func Example_nilReceiver() {
+	var s *stack.Stack[int] // nil, never initialized
+
+	fmt.Println(s.Len(), s.IsEmpty())
+
+	v, ok := s.Pop()
+	fmt.Println(v, ok)
+	// Output:
+	// 0 true
+	// 0 false
 }
 
 // A practical example: checking whether brackets are balanced. Push each
